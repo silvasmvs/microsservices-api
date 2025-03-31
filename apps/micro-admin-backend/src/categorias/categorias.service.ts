@@ -2,17 +2,15 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { RpcException } from '@nestjs/microservices';
-import { Categoria } from './categorias/interfaces/categoria.interface';
-import { Jogador } from './jogadores/interfaces/jogador.interface';
+import { Categoria } from './interfaces/categoria.interface';
 
 @Injectable()
-export class AppService {
+export class CategoriasService {
   constructor(
       @InjectModel('Categoria') private readonly categoriaModel: Model<Categoria>,
-      @InjectModel('Jogador') private readonly jogadorModel: Model<Jogador>,
   ) {}
 
-  private readonly logger = new Logger(AppService.name);
+  private readonly logger = new Logger(CategoriasService.name);
 
   async criarCategoria(categoria: Categoria): Promise<Categoria> {
       try {

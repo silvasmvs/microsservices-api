@@ -153,6 +153,9 @@ importers:
       amqplib:
         specifier: ^0.10.5
         version: 0.10.5
+      class-validator:
+        specifier: ^0.14.1
+        version: 0.14.1
       mongoose:
         specifier: ^8.12.1
         version: 8.12.1(socks@2.8.4)

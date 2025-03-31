@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Logger, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { CriarCategoriaDto } from './dtos/criar-categoria.dto';
 import { Observable } from 'rxjs';
+import { AtualizarCategoriaDto } from './dtos/atualizar-categoria.dto';
 
 @Controller('api/v1')
 export class AppController {
@@ -22,8 +23,16 @@ export class AppController {
   @UsePipes(ValidationPipe)
   async criarCategoria(@Body() criarCategoriaDto: CriarCategoriaDto) {
     this.clientAdminBackend.emit('criar-categoria', criarCategoriaDto);
+  }
 
-
+  @Put('categorias/:_id')
+  @UsePipes(ValidationPipe)
+  async atualizarCategoria(
+    @Body() atualizarCategoriaDto: AtualizarCategoriaDto,
+    @Param('_id') _id: string
+  ) {
+    this.clientAdminBackend.emit('atualizar-categoria',
+      { id: _id, categoria: atualizarCategoriaDto });
   }
 
   @Get('categorias')

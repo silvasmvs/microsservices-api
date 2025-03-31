@@ -24,6 +24,15 @@ export class AppService {
       }
   }
 
+  async atualizarCategoria(_id: string, categoria: Categoria): Promise<void> {
+    try {
+      await this.categoriaModel.findOneAndUpdate({_id}, {$set: categoria}).exec();
+    } catch(error) {
+      this.logger.error(`error: ${JSON.stringify(error.message)}`);
+      throw new RpcException(error.message);
+    }
+  }
+
   async consultarTodos(): Promise<Categoria[]> {
     return this.categoriaModel.find().populate("jogadores").exec();
   }

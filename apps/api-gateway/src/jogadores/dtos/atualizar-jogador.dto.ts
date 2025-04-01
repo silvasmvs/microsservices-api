@@ -2,12 +2,15 @@ import { IsNotEmpty, IsOptional } from 'class-validator'
 
 export class AtualizarJogadorDto {
 
-    @IsNotEmpty()
+    /* @IsNotEmpty()
     readonly telefoneCelular: string;
     
     @IsNotEmpty()
-    readonly nome: string;
+    readonly nome: string; */
 
     @IsOptional()
-    categoria: string;
+    categoria?: string;
+
+    @IsOptional()
+    urlFoto?: string;
 }

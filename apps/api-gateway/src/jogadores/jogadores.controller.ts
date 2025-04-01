@@ -1,9 +1,11 @@
-import { Controller, Get, Logger, Post, UsePipes, ValidationPipe, Body, Query, Put, Param, BadRequestException, Delete } from '@nestjs/common';
+import { Controller, Get, Logger, Post, UsePipes, ValidationPipe, Body, Query, Put, Param, BadRequestException, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { CriarJogadorDto } from './dtos/criar-jogador.dto';
 import { AtualizarJogadorDto } from './dtos/atualizar-jogador.dto';
 import { Observable } from 'rxjs';
 import { ClientProxySmartRanking } from '../proxyrmq/client-proxy';
 import { ValidationParametersPipe } from 'src/common/pipes/validation-parameters.pipe';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { AwsService } from 'src/aws/aws.service';
 
 @Controller('api/v1/jogadores')
 export class JogadoresController {
@@ -13,11 +15,36 @@ export class JogadoresController {
   private clientAdminBackend: any;
 
   constructor(
-    private clientProxySmartRanking: ClientProxySmartRanking
+    private clientProxySmartRanking: ClientProxySmartRanking,
+    private awsService: AwsService
   ) {
     this.clientAdminBackend = this.clientProxySmartRanking.getClientProxyAdminBackendInstance();
   }
 
+  @Post('/:id/upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadArquivo(
+    @UploadedFile() file,
+    @Param('id') _id: string) {
+    this.logger.log(`file: ${file}`);
+
+    const jogador = await this.clientAdminBackend.send('consultar-jogadores', _id).toPromise();
+
+    if (!jogador) {
+      throw new BadRequestException(`Jogador não encontrado!`);
+    }
+
+    const urlFoto = await this.awsService.uploadArquivo(file, _id);
+
+    const atualizarJogadorDto: AtualizarJogadorDto = {};
+
+    atualizarJogadorDto.urlFoto = urlFoto?.url;
+
+    await this.clientAdminBackend.emit('atualizar-jogador', { id: _id, jogador: atualizarJogadorDto });
+
+    return this.clientAdminBackend.send('consultar-jogadores', _id).toPromise();
+  }
+ 
   @Post()
   @UsePipes(ValidationPipe)
   async criarJogador(

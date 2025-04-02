@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JogadoresController } from './jogadores.controller';
-import { ProxyRMQModule } from 'src/proxyrmq/proxyrmq.module';
-import { AwsModule } from 'src/aws/aws.module';
+import { ProxyRMQModule } from '../proxyrmq/proxyrmq.module'
+import { AwsModule } from '../aws/aws.module'
 
 @Module({
   imports: [ProxyRMQModule, AwsModule],  

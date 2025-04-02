@@ -3,13 +3,13 @@ import { CriarCategoriaDto } from './dtos/criar-categoria.dto';
 import { AtualizarCategoriaDto } from './dtos/atualizar-categoria.dto'
 import { Observable } from 'rxjs';
 import { ClientProxySmartRanking } from '../proxyrmq/client-proxy'
+import { ClientProxy } from '@nestjs/microservices';
 
 @Controller('api/v1/categorias')
 export class CategoriasController {
 
   private logger = new Logger(CategoriasController.name);
-
-  private clientAdminBackend: any;
+  private clientAdminBackend: ClientProxy;
 
   constructor(
     private clientProxySmartRanking: ClientProxySmartRanking
@@ -17,6 +17,7 @@ export class CategoriasController {
     this.clientAdminBackend = this.clientProxySmartRanking.getClientProxyAdminBackendInstance();
   }
 
+  
   @Post()
   @UsePipes(ValidationPipe)
   criarCategoria(

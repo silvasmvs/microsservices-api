@@ -1,10 +1,11 @@
 import * as mongoose from 'mongoose';
 
 export const JogadorSchema = new mongoose.Schema({
-    telefoneCelular: String,
-    email: { type: String, unique: true },
+    email: { type: String, unique: true},
+    telefoneCelular: { type: String},
     nome: String,
+    categoria: {type: mongoose.Schema.Types.ObjectId, ref: "Categoria" },
     ranking: String,
-    posicaoranking: Number,
-    urlFotoJogador: String
-}, { timestamps: true, collection: 'jogadores' })
+    posicaoRanking: Number,
+    urlFotoJogador: String,
+}, {timestamps: true, collection: 'jogadores'});

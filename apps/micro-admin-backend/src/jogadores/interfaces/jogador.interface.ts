@@ -1,10 +1,12 @@
-import { Document } from "mongoose";
+import { Document } from 'mongoose'
+import { Categoria } from '../../categorias/interfaces/categoria.interface'
 
-export interface Jogador extends Document{
+export interface Jogador extends Document {
     readonly telefoneCelular: string;
     readonly email: string;
-    nome: string;
+    categoria: Categoria;
+    nome: string;  
     ranking: string;
-    posicaoranking: number;
+    posicaoRanking: number;
     urlFotoJogador: string;
 }
